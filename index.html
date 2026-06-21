@@ -1,654 +1,246 @@
+```html
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jAI World | Ask Anything. Solve Everything.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        tech: ['Orbitron', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        body {
-            background-color: #03000a;
-            color: #f3f4f6;
-        }
-        /* Custom Neon Glow Text & Elements */
-        .neon-glow-cyan {
-            text-shadow: 0 0 10px rgba(6, 182, 212, 0.6), 0 0 20px rgba(6, 182, 212, 0.3);
-        }
-        .neon-glow-purple {
-            text-shadow: 0 0 10px rgba(168, 85, 247, 0.6), 0 0 20px rgba(168, 85, 247, 0.3);
-        }
-        .cyber-gradient {
-            background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #a855f7 100%);
-        }
-        .glass-card {
-            background: rgba(15, 10, 28, 0.75);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .glass-card:hover {
-            border-color: rgba(6, 182, 212, 0.4);
-            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
-            transform: translateY(-2px);
-        }
-        /* Dynamic subtle rotation for globe backdrop */
-        @keyframes subtle-orbit {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .animate-orbit {
-            animation: subtle-orbit 40s linear infinite;
-        }
-    
-        /* jAI World custom logo + AI Employee icons */
-        .jai-logo-mark {
-            position: relative;
-            width: 3rem;
-            height: 3rem;
-            border-radius: 9999px;
-            background: radial-gradient(circle at 35% 25%, rgba(34,211,238,.95), rgba(37,99,235,.75) 38%, rgba(15,23,42,.95) 70%);
-            box-shadow: 0 0 22px rgba(34,211,238,.45), inset 0 0 20px rgba(168,85,247,.35);
-            display: grid;
-            place-items: center;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        .jai-logo-mark::before {
-            content: "";
-            position: absolute;
-            inset: .35rem;
-            border: 1px solid rgba(34,211,238,.75);
-            border-left-color: rgba(168,85,247,.95);
-            border-right-color: rgba(34,211,238,.25);
-            border-radius: 9999px;
-            transform: rotate(-18deg);
-        }
-        .jai-logo-mark::after {
-            content: "";
-            position: absolute;
-            width: 120%;
-            height: 42%;
-            border-top: 2px solid rgba(34,211,238,.9);
-            border-bottom: 2px solid rgba(168,85,247,.75);
-            border-radius: 50%;
-            transform: rotate(-22deg);
-            opacity: .85;
-        }
-        .jai-logo-j {
-            position: relative;
-            z-index: 3;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-            font-size: 2rem;
-            line-height: 1;
-            color: white;
-            text-shadow: 0 0 12px rgba(34,211,238,.9), 0 0 24px rgba(168,85,247,.6);
-        }
-        .jai-hero-orb {
-            position: relative;
-            width: min(28rem, 88vw);
-            aspect-ratio: 1;
-            border-radius: 50%;
-            background:
-                radial-gradient(circle at 35% 30%, rgba(255,255,255,.9), rgba(34,211,238,.28) 25%, rgba(37,99,235,.22) 52%, rgba(2,6,23,.9) 78%),
-                repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.14) 0 1px, transparent 1px 9px);
-            border: 1px solid rgba(34,211,238,.55);
-            box-shadow: 0 0 55px rgba(34,211,238,.35), 0 0 95px rgba(168,85,247,.22), inset 0 0 45px rgba(255,255,255,.12);
-            display: grid;
-            place-items: center;
-        }
-        .jai-hero-orb::before,
-        .jai-hero-orb::after {
-            content: "";
-            position: absolute;
-            inset: 9%;
-            border-radius: 50%;
-            border: 2px solid rgba(34,211,238,.75);
-            transform: rotate(-18deg) scaleX(1.18);
-            box-shadow: 0 0 24px rgba(34,211,238,.45);
-        }
-        .jai-hero-orb::after {
-            border-color: rgba(168,85,247,.72);
-            transform: rotate(18deg) scaleX(1.18);
-        }
-        .jai-main-symbol {
-            position: relative;
-            z-index: 5;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
-        }
-        .jai-main-j {
-            font-size: clamp(6rem, 12vw, 10rem);
-            line-height: .8;
-            background: linear-gradient(180deg, #0ea5e9, #1d4ed8 50%, #06b6d4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 32px rgba(34,211,238,.45);
-        }
-        .jai-main-ai {
-            font-size: clamp(2.8rem, 6vw, 5rem);
-            color: #67e8f9;
-            text-shadow: 0 0 12px #22d3ee, 0 0 32px rgba(34,211,238,.8);
-        }
-        .robot-outline {
-            position: absolute;
-            right: -2rem;
-            bottom: -1.5rem;
-            font-size: clamp(5rem, 13vw, 9rem);
-            color: #67e8f9;
-            opacity: .9;
-            filter: drop-shadow(0 0 18px rgba(34,211,238,.8));
-        }
-        .employee-icon {
-            width: 5rem;
-            height: 5rem;
-            margin-inline: auto;
-            border-radius: 1.5rem;
-            display: grid;
-            place-items: center;
-            font-size: 2.2rem;
-            border: 1px solid rgba(255,255,255,.14);
-            box-shadow: inset 0 0 22px rgba(255,255,255,.06), 0 0 24px var(--employee-glow);
-            background: linear-gradient(145deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
-            color: var(--employee-color);
-        }
-        .employee-card {
-            border-color: color-mix(in srgb, var(--employee-color) 45%, transparent);
-            box-shadow: 0 0 24px var(--employee-glow);
-        }
+  <title>jAI World | Ask Anything. Solve Everything.</title>
 
-    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: Inter, system-ui, sans-serif; background:#050510; color:white; }
+    .glass { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); backdrop-filter:blur(14px); }
+    .glow-cyan { box-shadow:0 0 40px rgba(37,244,238,.25); }
+    .glow-pink { box-shadow:0 0 40px rgba(255,45,85,.30); }
+    .hero-bg {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(37,244,238,.20), transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(168,85,247,.18), transparent 35%),
+        radial-gradient(circle at 50% 90%, rgba(255,45,85,.16), transparent 40%);
+    }
+  </style>
 </head>
-<body class="selection:bg-cyan-500 selection:text-black min-h-screen flex flex-col justify-between overflow-x-hidden">
 
-    <nav class="sticky top-0 z-50 bg-[#03000a]/80 backdrop-blur-md border-b border-white/10 px-6 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <a href="#" class="flex items-center space-x-3 group">
-                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 p-[1px] shadow-[0_0_15px_rgba(6,182,212,0.4)]">
-                    <div class="w-full h-full bg-[#03000a] rounded-lg flex items-center justify-center">
-                        <svg class="w-5 h-5 text-cyan-400 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                        </svg>
-                    </div>
-                </div>
-                <span class="font-tech text-2xl font-black tracking-wider bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">jAI <span class="text-white text-lg font-sans font-normal tracking-normal ml-0.5">WORLD</span></span>
-            </a>
-            
-            <div class="hidden lg:flex items-center space-x-6 text-xs font-tech font-medium tracking-widest uppercase">
-                <a href="#" class="text-cyan-400 hover:text-cyan-300 transition-colors">Home</a>
-                <a href="#about" class="text-gray-400 hover:text-white transition-colors">About</a>
-                <a href="#divisions" class="text-gray-400 hover:text-white transition-colors">Divisions</a>
-                <a href="#services" class="text-gray-400 hover:text-white transition-colors">Services</a>
-                <a href="#ai-employees" class="text-gray-400 hover:text-white transition-colors">AI Staff</a>
-                <a href="#contact" class="text-gray-400 hover:text-white transition-colors">Contact</a>
-            </div>
+<body>
 
-            <div class="hidden sm:flex items-center space-x-2 text-xs px-3 py-1.5 bg-white/5 border border-white/10 rounded-full">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-gray-400 font-medium">ZA Hub Active</span>
-            </div>
+  <header class="sticky top-0 z-50 bg-[#050510]/90 backdrop-blur border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center font-black text-black glow-cyan">
+          jAI
         </div>
-    </nav>
-
-    <main class="flex-grow">
-        
-        <section class="relative min-h-[85vh] flex items-center justify-center px-6 py-12">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(6,182,212,0.12),transparent_50%)]"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,rgba(168,85,247,0.12),transparent_50%)]"></div>
-
-            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10 w-full">
-                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                    <div class="inline-flex items-center space-x-2 px-3 py-1 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-tech uppercase tracking-widest rounded-full">
-                        <span>Ecosystem Online</span>
-                    </div>
-                    <h1 class="font-tech text-4xl sm:text-6xl font-black tracking-tight leading-none text-white">
-                        Welcome to <br>
-                        <span class="bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 bg-clip-text text-transparent">jAI World</span>
-                    </h1>
-                    <h2 class="font-tech text-xl sm:text-2xl font-bold tracking-wide text-cyan-400 neon-glow-cyan">
-                        Ask Anything. Solve Everything.
-                    </h2>
-                    <p class="text-gray-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                        Your digital platform for structured AI consultation, technical service architecture, process automation frameworks, custom digital learning, and shared engineering mentorship.
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4 font-tech text-xs tracking-wider uppercase font-bold">
-                        <a href="#divisions" class="w-full sm:w-auto text-center px-8 py-4 cyber-gradient text-white rounded-lg transition-transform hover:scale-105 shadow-[0_0_25px_rgba(6,182,212,0.4)]">
-                            Ask jAI
-                        </a>
-                        <a href="#services" class="w-full sm:w-auto text-center px-8 py-4 bg-transparent border-2 border-cyan-400 text-cyan-400 rounded-lg transition-all hover:bg-cyan-400/10 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]">
-                            Explore Services
-                        </a>
-                    </div>
-                </div>
-
-                
-                <div class="lg:col-span-5 flex justify-center relative">
-                    <div class="absolute w-72 h-72 bg-cyan-500/20 rounded-full blur-[90px]"></div>
-                    <div class="relative w-full max-w-xl min-h-[420px] flex items-center justify-center">
-                        <div class="jai-hero-orb">
-                            <div class="jai-main-symbol">
-                                <span class="jai-main-j">j</span>
-                                <span class="jai-main-ai">AI</span>
-                            </div>
-                        </div>
-
-                        <div class="robot-outline">
-                            <i class="fa-solid fa-robot"></i>
-                        </div>
-
-                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-center">
-                            <h3 class="font-tech text-3xl sm:text-4xl font-black text-white">
-                                <span class="text-white">j</span><span class="text-cyan-300 neon-glow-cyan">AI</span> World
-                            </h3>
-                            <p class="text-cyan-300 font-tech text-xs sm:text-sm tracking-widest mt-2">
-                                Ask Anything. Solve Everything.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="about" class="py-24 px-6 border-y border-white/5 bg-black/30 relative">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-5 space-y-4">
-                    <span class="text-xs font-tech uppercase tracking-widest text-purple-400">Architectural Roots</span>
-                    <h2 class="font-tech text-3xl sm:text-4xl font-black text-white">20+ Years of Corporate Infrastructure Practice</h2>
-                    <div class="h-1 w-20 bg-gradient-to-r from-cyan-400 to-purple-500 rounded"></div>
-                </div>
-                <div class="lg:col-span-7 glass-card p-6 sm:p-8 rounded-2xl space-y-4">
-                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
-                        jAI World stems from over two decades of technical enterprise engineering across robust fields: transactional banking infrastructures, automated operations orchestration, complex mainframe logic layers, hyperscale cloud instances, highly available relational databases, fast DevOps loops, and complex digital transformation plans.
-                    </p>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Our ultimate target is focused cleanly on localized human enablement: breaking down high technology jargon, easing operational friction for small local businesses, building sustainable training paths for youth, and opening easy digital access pathways for everyone.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section id="divisions" class="py-24 px-6 max-w-7xl mx-auto space-y-12">
-            <div class="text-center space-y-3">
-                <span class="text-xs font-tech uppercase tracking-widest text-cyan-400">Main Framework Ecosystem</span>
-                <h2 class="font-tech text-3xl sm:text-5xl font-black text-white">The Subdivisions of Our World</h2>
-                <p class="text-gray-400 max-w-xl mx-auto text-sm">Targeted professional operational vectors operating in unison underneath the core jAI World identity.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">Ask jAI</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Direct problem-solving interfaces, directional logic loops, operational answers, individual strategic advice, and day-to-day platform support mechanisms.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-cyan-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-purple-950/40 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Tech</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Core network engineering support, system provisioning, performance profiling, responsive web layouts, database installations, and cloud consultancy layers.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-purple-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Automate</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Intelligent process flow maps, automated script integrations, business workflow enhancement modeling, task-specific bots, and systematic overhead reduction.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-cyan-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-purple-950/40 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Learn</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Pragmatic capability roadmaps, architectural code walkthroughs, baseline career path mentoring, and clear computer literacy learning blueprints.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-purple-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Community</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Collaborative ecosystem networking groups, localized tech forums, knowledge bases, and peer-led troubleshooting directories.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-cyan-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="w-10 h-10 rounded bg-purple-950/40 border border-purple-500/30 flex items-center justify-center text-purple-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Store</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Pre-built boilerplate scripts, UI layout blueprints, verified structural tool suites, affiliate systems assets, and code optimization sheets.</p>
-                    </div>
-                    <a href="#contact" class="mt-4 text-xs font-tech text-purple-400 tracking-wider inline-flex items-center space-x-1 group"><span>Request Node</span> <span>&rarr;</span></a>
-                </div>
-
-                <div class="glass-card p-6 rounded-xl transition-all duration-300 lg:col-span-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div class="space-y-2 max-w-2xl">
-                        <div class="w-10 h-10 rounded bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                        </div>
-                        <h3 class="font-tech text-base font-bold text-white">jAI Foundation</h3>
-                        <p class="text-xs text-gray-400 leading-relaxed">Dedicated youth code modules, free technical baseline workshops, community educational sponsorships, and structural skill mentorship frameworks for under-resourced hubs.</p>
-                    </div>
-                    <a href="#contact" class="text-xs font-tech text-cyan-400 tracking-wider whitespace-nowrap py-2 px-4 bg-cyan-500/10 border border-cyan-500/20 rounded hover:bg-cyan-500/20 transition-colors self-start sm:self-center">Explore Work</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="services" class="py-24 px-6 bg-black/40 border-y border-white/5">
-            <div class="max-w-7xl mx-auto space-y-12">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                    <div class="space-y-3">
-                        <span class="text-xs font-tech uppercase tracking-widest text-purple-400">Capabilities Array</span>
-                        <h2 class="font-tech text-3xl sm:text-4xl font-black text-white">Our Core Capabilities</h2>
-                    </div>
-                    <p class="text-gray-400 max-w-sm text-xs leading-relaxed">Enterprise architecture models tailored intelligently to service local developer and startup tracks perfectly.</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-cyan-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">AI Guidance & Consulting</h4><p class="text-[11px] text-gray-400 mt-0.5">Integrate open-source large language tools and workflow logic paths efficiently.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-purple-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Website Creation</h4><p class="text-[11px] text-gray-400 mt-0.5">High-speed production web environments optimized for seamless client interaction.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-cyan-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Small Business IT Support</h4><p class="text-[11px] text-gray-400 mt-0.5">Hardware setup architectures, routing rules, and local server setup support.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-purple-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M4 9h16M5 19h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Automation & RPA Solutions</h4><p class="text-[11px] text-gray-400 mt-0.5">Design automated processes that systematically clean and pass system data blocks.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-cyan-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Database Support</h4><p class="text-[11px] text-gray-400 mt-0.5">Schema optimizations, indexing fixes, and query structure health overhauls.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-purple-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Cloud & DevOps Guidance</h4><p class="text-[11px] text-gray-400 mt-0.5">Migrate apps securely into cloud clusters using fast build automation loops.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-cyan-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Career & Skills Mentoring</h4><p class="text-[11px] text-gray-400 mt-0.5">Direct technical track advice for engineers breaking into modern environments.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-purple-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Digital Templates & Resources</h4><p class="text-[11px] text-gray-400 mt-0.5">Preconfigured environment scripts that remove repetitive boilerplate work.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors">
-                        <div class="text-cyan-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Business Process Improvement</h4><p class="text-[11px] text-gray-400 mt-0.5">Analyze logic workflows to detect data gaps and reduce delivery drag.</p></div>
-                    </div>
-                    <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex items-start space-x-3 hover:bg-white/[0.04] transition-colors lg:col-span-3">
-                        <div class="text-purple-400 mt-0.5"><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg></div>
-                        <div><h4 class="font-tech text-xs font-bold text-white">Content & Brand Support</h4><p class="text-[11px] text-gray-400 mt-0.5">Clean brand storytelling strategy and asset design guidelines to reach audiences confidently.</p></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="py-24 px-6 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div class="space-y-4">
-                <span class="text-xs font-tech uppercase tracking-widest text-cyan-400">Core Value Insurance</span>
-                <h2 class="font-tech text-3xl sm:text-4xl font-black text-white">Smart. Reliable. Always Working for You.</h2>
-                <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
-                    jAI World addresses the exact friction points found across traditional technical services: abstract advice, unoptimized tools, and restrictive retainer walls. We balance professional systemic oversight with friendly execution guidelines.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div class="p-4 bg-white/5 rounded-xl border border-white/5 space-y-2">
-                    <div class="text-cyan-400"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                    <h4 class="text-xs font-tech font-bold text-white">Beginner Friendly</h4>
-                    <p class="text-[11px] text-gray-400">Straightforward systems breakdowns completely devoid of technical gatekeeping.</p>
-                </div>
-                <div class="p-4 bg-white/5 rounded-xl border border-white/5 space-y-2">
-                    <div class="text-purple-400"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
-                    <h4 class="text-xs font-tech font-bold text-white">Affordable Support</h4>
-                    <p class="text-[11px] text-gray-400">Accessible micro consulting tiers priced clearly for individuals and SMMEs.</p>
-                </div>
-                <div class="p-4 bg-white/5 rounded-xl border border-white/5 space-y-2">
-                    <div class="text-cyan-400"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5A2.5 2.5 0 0019 9.5V7.414a2 2 0 00-.586-1.414l-1-1A2 2 0 0016 4.414V4M12 3a9 9 0 100 18 9 9 0 000-18z" /></svg></div>
-                    <h4 class="text-xs font-tech font-bold text-white">Global Footprint</h4>
-                    <p class="text-[11px] text-gray-400">Operating cleanly from South Africa while maintaining world-class design standard loops.</p>
-                </div>
-                <div class="p-4 bg-white/5 rounded-xl border border-white/5 space-y-2">
-                    <div class="text-purple-400"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11.571V11m.531-1.79a10.07 10.07 0 00-.707-1.07l-.127-.155m-1.63-.12A7 7 0 0010 12.587V14M18.001 19c-1.744-2.772-2.753-6.054-2.753-9.571V11a3 3 0 11-6 0V9.75M19.5 9.5a6.556 6.556 0 00-1.5-3.75M13.875 14H14" /></svg></div>
-                    <h4 class="text-xs font-tech font-bold text-white">Empowerment Focused</h4>
-                    <p class="text-[11px] text-gray-400">Deep corporate commitment to continuous professional growth and localized learning metrics.</p>
-                </div>
-            </div>
-        </section>
-
-        
-        <section id="ai-employees" class="py-24 px-6 bg-black/30 border-t border-white/5">
-            <div class="max-w-7xl mx-auto space-y-14">
-                <div class="text-center space-y-4">
-                    <span class="text-xs font-tech uppercase tracking-widest text-purple-400">Our AI Employees</span>
-                    <h2 class="font-tech text-3xl sm:text-5xl font-black text-white">Meet the jAI World AI Employees</h2>
-                    <p class="text-gray-400 max-w-2xl mx-auto text-sm">
-                        Each jAI Employee has its own icon, purpose, colour identity, and job inside the jAI World ecosystem.
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#22d3ee;--employee-glow:rgba(34,211,238,.22);">
-                        <div class="employee-icon"><i class="fa-solid fa-comments"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-cyan-300">AI</span> Advisor</h3>
-                        <p class="text-cyan-300 font-semibold text-sm mt-2">Ask Anything. Get Guidance.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">Questions, guidance, problem-solving, personal advice, and business help.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#4ade80;--employee-glow:rgba(74,222,128,.22);">
-                        <div class="employee-icon"><i class="fa-solid fa-users"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-green-300">AI</span> Connect</h3>
-                        <p class="text-green-300 font-semibold text-sm mt-2">Together We Talk. Together We Grow.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">Community, discussions, support, networking, and shared growth.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#c084fc;--employee-glow:rgba(192,132,252,.24);">
-                        <div class="employee-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-purple-300">AI</span> Mentor</h3>
-                        <p class="text-purple-300 font-semibold text-sm mt-2">Learn Skills. Build Confidence.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">Learning, mentoring, skills development, tutorials, and career guidance.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#38bdf8;--employee-glow:rgba(56,189,248,.24);">
-                        <div class="employee-icon"><i class="fa-solid fa-headset"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-sky-300">AI</span> Techie</h3>
-                        <p class="text-sky-300 font-semibold text-sm mt-2">Tech Solutions. Real Support.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">IT support, websites, cloud, database, systems, and technical consulting.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#f59e0b;--employee-glow:rgba(245,158,11,.26);">
-                        <div class="employee-icon"><i class="fa-solid fa-gear"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-amber-300">AI</span> BotWorks</h3>
-                        <p class="text-amber-300 font-semibold text-sm mt-2">Automate Today. Elevate Tomorrow.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">AI automation, RPA, workflow automation, bots, and business processes.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#f472b6;--employee-glow:rgba(244,114,182,.24);">
-                        <div class="employee-icon"><i class="fa-solid fa-cart-shopping"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-pink-300">AI</span> Market</h3>
-                        <p class="text-pink-300 font-semibold text-sm mt-2">Smart Products. Better Living.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">Digital products, affiliate tools, templates, resources, and recommendations.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300" style="--employee-color:#a3e635;--employee-glow:rgba(163,230,53,.24);">
-                        <div class="employee-icon"><i class="fa-solid fa-hands-holding-heart"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-lime-300">AI</span> Hope</h3>
-                        <p class="text-lime-300 font-semibold text-sm mt-2">Empowering Youth. Building Tomorrow.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">Youth support, community upliftment, digital education, and mentoring.</p>
-                    </div>
-
-                    <div class="glass-card employee-card rounded-2xl p-6 text-center transition-all duration-300 bg-gradient-to-br from-cyan-950/40 via-purple-950/40 to-black" style="--employee-color:#67e8f9;--employee-glow:rgba(34,211,238,.30);">
-                        <div class="employee-icon"><i class="fa-solid fa-globe"></i></div>
-                        <h3 class="font-tech text-xl font-black text-white mt-5"><span class="text-white">j</span><span class="text-cyan-300">AI</span> World</h3>
-                        <p class="text-cyan-300 font-semibold text-sm mt-2">One World. Endless Possibilities.</p>
-                        <p class="text-xs text-gray-400 mt-3 leading-relaxed">The main home of the complete AI Employee Network.</p>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-<section class="py-16 px-6 max-w-4xl mx-auto">
-            <div class="cyber-gradient p-8 sm:p-12 rounded-2xl text-center space-y-6 shadow-2xl relative overflow-hidden">
-                <div class="absolute -top-12 -left-12 w-40 h-40 bg-white/5 rounded-full pointer-events-none"></div>
-                <h2 class="font-tech text-2xl sm:text-4xl font-black text-white">Ready to solve your next problem?</h2>
-                <p class="text-white/90 max-w-md mx-auto text-sm leading-relaxed">
-                    Whether you require senior technical project deployment or straightforward startup optimization loops, jAI World handles your data track seamlessly.
-                </p>
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2 font-tech text-xs tracking-wider uppercase font-bold">
-                    <a href="#divisions" class="w-full sm:w-auto px-6 py-4 bg-black text-white rounded-lg hover:bg-neutral-900 transition-colors">
-                        Start with Ask jAI
-                    </a>
-                    <a href="#contact" class="w-full sm:w-auto px-6 py-4 bg-white text-blue-950 rounded-lg hover:bg-gray-100 transition-colors">
-                        Contact Us
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="py-24 px-6 max-w-7xl mx-auto border-t border-white/5">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                <div class="lg:col-span-5 space-y-6">
-                    <div class="space-y-3">
-                        <span class="text-xs font-tech uppercase tracking-widest text-cyan-400">Communications Gateway</span>
-                        <h2 class="font-tech text-3xl font-black text-white">Initialize Signal Connection</h2>
-                        <p class="text-gray-400 text-sm">Pass an operational query package directly into our technical desk or step straight into our real-time messaging tunnels.</p>
-                    </div>
-
-                    <div class="space-y-3 pt-2">
-                        <a href="https://wa.me/#" target="_blank" class="flex items-center space-x-3 p-3 bg-emerald-950/20 border border-emerald-500/30 rounded-xl hover:bg-emerald-950/40 transition-colors">
-                            <div class="w-8 h-8 rounded bg-emerald-500 flex items-center justify-center text-black">
-                                <svg class="w-4 h-4 fill-currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397 0 11.973 0c3.184.001 6.182 1.242 8.438 3.499 2.256 2.257 3.493 5.256 3.491 8.44-.003 6.584-5.341 11.931-11.916 11.931-2.007-.001-3.982-.51-5.734-1.482L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.528 2.005 14.07 1.05 11.97 1.05c-5.436 0-9.861 4.372-9.865 9.801-.001 1.736.47 3.425 1.364 4.943l-.993 3.629 3.71-.969zm13.111-7.291c-.302-.15-.1.443-.453-.604-.075-.225-.26-.345-.528-.479-.264-.135-1.562-.767-1.8-.854-.236-.086-.407-.13-.578.135-.171.264-.66.828-.808.995-.149.167-.299.188-.6.038-.303-.15-1.277-.47-2.434-1.503-.9-.803-1.507-1.794-1.684-2.094-.177-.302-.019-.465.132-.614.136-.134.302-.353.453-.529.151-.177.201-.294.302-.49.101-.196.051-.369-.026-.52-.075-.15-.659-1.591-.903-2.179-.239-.574-.482-.497-.66-.505-.17-.008-.367-.009-.563-.009-.197 0-.518.074-.789.37-.27.295-1.03 1.008-1.03 2.458 0 1.45 1.055 2.852 1.202 3.053.148.2 2.077 3.17 5.031 4.453.703.305 1.252.487 1.68.623.706.225 1.35.193 1.859.118.567-.084 1.562-.638 1.782-1.254.22-.617.22-1.149.154-1.255-.066-.107-.243-.17-.545-.32z"/></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">WhatsApp Operations Vector</h4>
-                                <p class="text-[10px] text-emerald-400">Instant routing connection channel</p>
-                            </div>
-                        </a>
-                        <a href="mailto:info@jaiworld.co.za" class="flex items-center space-x-3 p-3 bg-cyan-950/20 border border-cyan-500/30 rounded-xl hover:bg-cyan-950/40 transition-colors">
-                            <div class="w-8 h-8 rounded bg-cyan-500 flex items-center justify-center text-black">
-                                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                            </div>
-                            <div>
-                                <h4 class="text-xs font-bold text-white">Direct Email Gateway</h4>
-                                <p class="text-[10px] text-cyan-400">info@jaiworld.co.za</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-7 bg-[#0a0712] p-6 sm:p-8 rounded-2xl border border-white/5 shadow-2xl">
-                    <form class="space-y-4" action="#" method="POST" onsubmit="event.preventDefault(); alert('Transmission simulated.');">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-tech uppercase tracking-wider text-gray-400">Operator Name</label>
-                                <input type="text" required placeholder="Your Name" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-cyan-400 text-white transition-colors">
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-tech uppercase tracking-wider text-gray-400">Email Address</label>
-                                <input type="email" required placeholder="name@domain.com" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-cyan-400 text-white transition-colors">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-tech uppercase tracking-wider text-gray-400">Phone Signal</label>
-                                <input type="tel" placeholder="+27 82 123 4567" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-cyan-400 text-white transition-colors">
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-tech uppercase tracking-wider text-gray-400">Ecosystem Vector Stream</label>
-                                <select class="w-full bg-neutral-900 border border-white/10 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-cyan-400 text-gray-300 transition-colors">
-                                    <option>General Support / Ask jAI</option>
-                                    <option>jAI Tech - Core Systems Support</option>
-                                    <option>jAI Automate - Process Optimization</option>
-                                    <option>jAI Learn - Structural Mentorship</option>
-                                    <option>jAI Store Assets & Tools</option>
-                                    <option>jAI Foundation Programs</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-tech uppercase tracking-wider text-gray-400">Message Parameters</label>
-                            <textarea rows="4" required placeholder="Describe your operational bottleneck or consulting requirements..." class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-xs focus:outline-none focus:border-cyan-400 text-white transition-colors"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full py-4 bg-gradient-to-r from-cyan-500 to-purple-600 font-tech text-xs font-bold tracking-widest text-white uppercase rounded-lg shadow-lg hover:shadow-[0_0_20px_rgba(168,85,247,0.3)] transition-all">
-                            Transmit Data Packet
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer class="border-t border-white/10 bg-[#020006] py-8 px-6 text-[11px] text-gray-500">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="text-center md:text-left space-y-1">
-                <p class="font-tech text-sm font-bold text-white tracking-wider">jAI WORLD</p>
-                <p>© 2026 jAI World. Deploying professional digital transformation from Gauteng, South Africa.</p>
-            </div>
-            <div class="flex space-x-4 text-gray-400">
-                <a href="#" class="hover:text-cyan-400 transition-colors">Privacy Protocols</a>
-                <span>•</span>
-                <a href="#" class="hover:text-cyan-400 transition-colors">Terms of Operations</a>
-            </div>
+        <div>
+          <h1 class="text-2xl font-black">
+            j<span class="text-cyan-300">AI</span> <span class="text-pink-400">World</span>
+          </h1>
+          <p class="text-xs text-cyan-300 font-bold">Ask Anything. Solve Everything.</p>
         </div>
-    </footer>
+      </a>
+
+      <nav class="hidden lg:flex gap-6 text-sm font-bold text-white/75">
+        <a href="#about">About</a>
+        <a href="#divisions">Divisions</a>
+        <a href="#services">Services</a>
+        <a href="#employees">AI Employees</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a href="#contact" class="bg-pink-500 px-5 py-2 rounded-full font-black glow-pink">Start Now</a>
+    </div>
+  </header>
+
+  <section class="hero-bg min-h-[90vh] flex items-center">
+    <div class="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center py-16">
+      <div>
+        <p class="text-cyan-300 font-black tracking-[0.3em] uppercase mb-5">
+          AI · Technology · Automation · Learning
+        </p>
+
+        <h2 class="text-5xl md:text-7xl font-black leading-tight mb-6">
+          Welcome to <span class="text-cyan-300">jAI World</span>
+        </h2>
+
+        <p class="text-2xl text-pink-400 font-black mb-4">
+          Ask Anything. Solve Everything.
+        </p>
+
+        <p class="text-white/70 text-lg md:text-xl mb-8">
+          Your digital world for AI guidance, technology services, automation, learning, business support, and community empowerment.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="#ask" class="bg-pink-500 px-7 py-4 rounded-full font-black glow-pink">Ask jAI</a>
+          <a href="#services" class="border border-cyan-300 text-cyan-300 px-7 py-4 rounded-full font-black">Explore Services</a>
+          <a href="#community" class="bg-white/10 px-7 py-4 rounded-full font-black">Join Community</a>
+        </div>
+      </div>
+
+      <div class="glass rounded-[2rem] p-6 glow-cyan">
+        <div class="bg-black/50 rounded-[2rem] p-6 text-center">
+          <div class="mx-auto w-56 h-56 rounded-full bg-gradient-to-br from-cyan-300 via-blue-500 to-purple-700 flex items-center justify-center glow-cyan mb-6">
+            <div class="w-40 h-40 rounded-full bg-[#050510] flex items-center justify-center text-6xl">
+              🌍
+            </div>
+          </div>
+          <h3 class="text-3xl font-black mb-4">AI-powered digital ecosystem</h3>
+          <p class="text-white/65 mb-6">
+            Guidance, tech help, automation, mentoring, business support and community growth in one place.
+          </p>
+          <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-white/10 rounded-2xl p-4">🧠 Ask</div>
+            <div class="bg-white/10 rounded-2xl p-4">🛠️ Build</div>
+            <div class="bg-white/10 rounded-2xl p-4">🤖 Automate</div>
+            <div class="bg-white/10 rounded-2xl p-4">🚀 Grow</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" class="py-20 border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <p class="text-pink-400 font-black uppercase tracking-[0.3em] mb-4">About jAI World</p>
+      <h2 class="text-4xl md:text-5xl font-black mb-6">
+        Built from real IT experience to help real people solve real problems.
+      </h2>
+      <p class="text-white/70 text-lg">
+        jAI World was created from over 20 years of corporate IT experience across banking, automation, mainframe, cloud, databases, DevOps, reporting, systems support and digital transformation. The mission is to share knowledge, help small businesses, mentor the youth, support communities and make technology easier for everyone.
+      </p>
+    </div>
+  </section>
+
+  <section id="divisions" class="py-20 bg-black/30 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-black mb-4">Our World / Divisions</h2>
+      <p class="text-white/70 mb-10">jAI World is the main brand. Each division has its own purpose.</p>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-cyan-300">Ask jAI</h3><p class="text-white/60 mt-3">Questions, guidance, problem-solving, personal advice, business help and everyday support.</p></div>
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-pink-400">jAI Tech</h3><p class="text-white/60 mt-3">IT support, systems support, cloud, databases, infrastructure, websites and consulting.</p></div>
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-cyan-300">jAI Automate</h3><p class="text-white/60 mt-3">AI automation, RPA, workflows, bots, process improvement and demos.</p></div>
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-pink-400">jAI Learn</h3><p class="text-white/60 mt-3">Skills development, mentoring, tutorials, career guidance and beginner-friendly learning.</p></div>
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-cyan-300">jAI Community</h3><p class="text-white/60 mt-3">A safe space for discussions, support, networking, growth and sharing knowledge.</p></div>
+        <div class="glass rounded-3xl p-6"><h3 class="text-2xl font-black text-pink-400">jAI Foundation</h3><p class="text-white/60 mt-3">Youth support, community upliftment, digital education, mentoring and guidance.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" class="py-20 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="text-cyan-300 font-black uppercase tracking-[0.3em] mb-4">Services</p>
+      <h2 class="text-4xl md:text-5xl font-black mb-10">What jAI World can help with</h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">AI guidance and consulting</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Website creation</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Small business IT support</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Automation and RPA solutions</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Database support</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Cloud and DevOps guidance</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Career and skills mentoring</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Digital templates and resources</div>
+        <div class="bg-white/5 rounded-3xl p-6 border border-white/10">Business process improvement</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="employees" class="py-20 bg-black/30 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4">
+      <p class="text-pink-400 font-black uppercase tracking-[0.3em] mb-4">AI Employees</p>
+      <h2 class="text-4xl md:text-5xl font-black mb-10">Meet the jAI World AI Employees</h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-5">
+        <div class="glass rounded-3xl p-6 text-center"><div class="text-5xl mb-4">🧭</div><h3 class="font-black text-cyan-300">jAI Guide</h3><p class="text-white/60 text-sm mt-3">Answers questions and gives advice.</p></div>
+        <div class="glass rounded-3xl p-6 text-center"><div class="text-5xl mb-4">🛠️</div><h3 class="font-black text-pink-400">jAI Techie</h3><p class="text-white/60 text-sm mt-3">Helps with IT and technical problems.</p></div>
+        <div class="glass rounded-3xl p-6 text-center"><div class="text-5xl mb-4">🤖</div><h3 class="font-black text-cyan-300">jAI Automator</h3><p class="text-white/60 text-sm mt-3">Helps automate business tasks.</p></div>
+        <div class="glass rounded-3xl p-6 text-center"><div class="text-5xl mb-4">🎓</div><h3 class="font-black text-pink-400">jAI Mentor</h3><p class="text-white/60 text-sm mt-3">Supports learning and career growth.</p></div>
+        <div class="glass rounded-3xl p-6 text-center"><div class="text-5xl mb-4">🎨</div><h3 class="font-black text-cyan-300">jAI Creator</h3><p class="text-white/60 text-sm mt-3">Helps with content, branding and ideas.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="ask" class="py-20 border-t border-white/10">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-4xl md:text-5xl font-black mb-4">Ask jAI</h2>
+      <p class="text-white/70 mb-8">Ask a question, request guidance or share your idea.</p>
+
+      <form class="glass rounded-3xl p-6 space-y-4">
+        <input class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3" placeholder="Your name">
+        <input class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3" placeholder="Your email">
+        <select class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3">
+          <option>Ask jAI</option>
+          <option>jAI Tech</option>
+          <option>jAI Automate</option>
+          <option>jAI Learn</option>
+          <option>jAI Community</option>
+          <option>jAI Foundation</option>
+        </select>
+        <textarea class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 h-36" placeholder="Tell jAI what you need help with..."></textarea>
+        <button type="button" class="bg-cyan-300 text-black px-6 py-3 rounded-full font-black">Submit Question</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="community" class="py-20 bg-black/30 border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 text-center">
+      <h2 class="text-4xl md:text-5xl font-black mb-6">Ready to solve your next problem?</h2>
+      <p class="text-white/70 text-lg mb-8">
+        Whether you need advice, IT support, automation, learning or business guidance, jAI World is here to help.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#ask" class="bg-pink-500 px-7 py-4 rounded-full font-black glow-pink">Start with Ask jAI</a>
+        <a href="#contact" class="border border-cyan-300 text-cyan-300 px-7 py-4 rounded-full font-black">Contact Us</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="py-20 border-t border-white/10">
+    <div class="max-w-6xl mx-auto px-4 grid lg:grid-cols-2 gap-10 items-center">
+      <div>
+        <p class="text-cyan-300 font-black uppercase tracking-[0.3em] mb-4">Contact</p>
+        <h2 class="text-4xl md:text-5xl font-black mb-6">Start your journey with jAI World.</h2>
+        <p class="text-white/70 mb-8">
+          Proudly South African with a global vision. Reach out for guidance, support, automation, learning or digital services.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="mailto:info@jaiworld.co.za" class="bg-cyan-300 text-black px-6 py-3 rounded-full font-black">Email jAI World</a>
+          <a href="https://wa.me/27000000000" class="bg-green-500 px-6 py-3 rounded-full font-black">WhatsApp</a>
+        </div>
+      </div>
+
+      <form class="glass rounded-3xl p-6 space-y-4">
+        <input class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3" placeholder="Name">
+        <input class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3" placeholder="Email">
+        <input class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3" placeholder="Phone">
+        <select class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3">
+          <option>Service interested in</option>
+          <option>AI guidance</option>
+          <option>Website creation</option>
+          <option>IT support</option>
+          <option>Automation</option>
+          <option>Learning / Mentoring</option>
+          <option>Business support</option>
+        </select>
+        <textarea class="w-full bg-black/50 border border-white/10 rounded-2xl px-4 py-3 h-32" placeholder="Message"></textarea>
+        <button type="button" class="w-full bg-pink-500 py-4 rounded-full font-black glow-pink">Send Message</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="py-10 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between gap-4 items-center">
+      <div>
+        <p class="text-xl font-black">j<span class="text-cyan-300">AI</span> <span class="text-pink-400">World</span></p>
+        <p class="text-white/50 text-sm">Ask Anything. Solve Everything.</p>
+      </div>
+      <p class="text-white/50 text-sm">© 2026 jAI World · Ask · Learn · Build · Automate · Grow</p>
+    </div>
+  </footer>
 
 </body>
 </html>
-
-
-
-
-Gemini is AI and can make mistakes.
+```
