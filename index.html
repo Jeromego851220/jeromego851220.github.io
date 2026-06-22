@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jAI World | Ask Anything. Solve Everything.</title>
+    <meta name="description" content="jAI World is a premium AI-powered digital ecosystem offering AI assistance, technology services, automation, digital products, and enterprise business solutions.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-base: #060814;
+            --bg-surface: rgba(15, 22, 42, 0.65);
+            --bg-card: rgba(30, 41, 59, 0.45);
+            --accent-cyan: #00f2fe;
+            --accent-blue: #4facfe;
+            --accent-purple: #7f5af0;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 242, 254, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glow-shadow: auto 0px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Typography Utilities */
+        h1, h2, h3, .brand-logo {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        span.brand-j { text-transform: lowercase; color: var(--text-main); }
+        span.brand-ai { text-transform: uppercase; color: var(--accent-cyan); text-shadow: 0 0 10px var(--border-glow); }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-base); }
+        ::-webkit-scrollbar-thumb { background: var(--accent-blue); border-radius: 4px; }
+
+        /* Header & Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(6, 8, 20, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 2rem;
+        }
+
+        .brand-logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 8px var(--border-glow);
+        }
+
+        .nav-toggle {
+            display: none;
+            color: var(--text-main);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Glassmorphism Layout Reusables */
+        .page-view {
+            display: none;
+            padding-top: 90px;
+            animation: fadeIn 0.5s ease forward;
+        }
+
+        .page-view.active-view {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-padding {
+            padding: 5rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 30%, var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+        }
+
+        .glass-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(16px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 10px 30px rgba(0, 242, 254, 0.1);
+        }
+
+        /* Interactive Elements */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: #060814;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 25px rgba(0, 242, 254, 0.4);
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--accent-purple);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(127, 90, 240, 0.1);
+            border-color: var(--accent-cyan);
+        }
+
+        /* Grid Frameworks */
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 3rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+
+        /* Specific Page / Section Styling */
+        /* Hero Section */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            background: radial-gradient(circle at 80% 20%, rgba(127, 90, 240, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 10% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-slogan {
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 2px;
+        }
+
+        .hero-text {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Badges & Highlights */
+        .trust-badges {
+            margin-top: 4rem;
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+        }
+
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .badge-item i {
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+        }
+
+        /* AI Employees */
+        .ai-icon-wrapper {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: rgba(0, 242, 254, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: var(--accent-cyan);
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(0, 242, 254, 0.2);
+        }
+
+        /* About / Founder Split Layout */
+        .about-split {
+            align-items: center;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 22, 42, 0.9));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-purple));
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.35rem 0.85rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Filter Elements / Categories */
+        .category-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .filter-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 0.5rem 1.25rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-chip.active, .filter-chip:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-control {
+            width: 100%;
+            background: rgba(6, 8, 20, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Footer Customizations */
+        footer {
+            background: #03050c;
+            border-top: 1px solid var(--glass-border);
+            padding: 4rem 2rem 2rem;
+            margin-top: 6rem;
+        }
+
+        .footer-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand p {
+            color: var(--text-muted);
+            margin-top: 1rem;
+            max-width: 320px;
+        }
+
+        .footer-links-col h4 {
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .footer-links-col ul {
+            list-style: none;
+        }
+
+        .footer-links-col ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links-col ul li a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links-col ul li a:hover {
+            color: var(--accent-cyan);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .footer-legal-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Responsiveness Overrides */
+        @media (max-width: 992px) {
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .hero-content h1 { font-size: 3rem; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: #060814;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 1.5rem 2rem;
+                gap: 1rem;
+            }
+
+            .nav-menu.mobile-open { display: flex; }
+            .nav-toggle { display: block; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .hero-content h1 { font-size: 2.5rem; }
+            .section-header h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="nav-container">
+            <a href="#" class="brand-logo" onclick="switchView('home-view')">
+                <span class="brand-j">j</span><span class="brand-ai">AI</span> World
+            </a>
+            <div class="nav-toggle" id="nav-burger">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+            <ul class="nav-menu" id="nav-links">
+                <li><a class="nav-link active" onclick="switchView('home-view')">Home</a></li>
+                <li><a class="nav-link" onclick="switchView('about-view')">About</a></li>
+                <li><a class="nav-link" onclick="switchView('ai-employees-view')">AI Employees</a></li>
+                <li><a class="nav-link" onclick="switchView('services-view')">Services</a></li>
+                <li><a class="nav-link" onclick="switchView('pricing-view')">Pricing</a></li>
+                <li><a class="nav-link" onclick="switchView('blog-view')">Knowledge Hub</a></li>
+                <li><a class="nav-link" onclick="switchView('store-view')">Store</a></li>
+                <li><a class="nav-link" onclick="switchView('contact-view')">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="home-view" class="page-view active-view">
+        <section class="hero section-padding">
+            <div class="hero-content">
+                <div class="hero-slogan">Ask Anything. Solve Everything.</div>
+                <h1>Empowering Digital Growth Through Next-Gen <span class="brand-ai">AI</span> Architecture</h1>
+                <p class="hero-text">Welcome to jAI World—a futuristic digital ecosystem integrating advanced automated workflows, tactical IT infrastructure systems, adaptive learning metrics, and elite cloud consulting solutions tailored for contemporary businesses.</p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="switchView('ai-employees-view')">Explore AI Employees <i class="fa-solid fa-robot"></i></button>
+                    <button class="btn btn-secondary" onclick="switchView('services-view')">Our Professional Services</button>
+                </div>
+                <div class="trust-badges">
+                    <div class="badge-item"><i class="fa-solid fa-circle-check"></i> Enterprise Automation Ecosystem</div>
+                    <div class="badge-item"><i class="fa-solid fa-shield-halved"></i> 20+ Years Banking IT Infrastructure Expertise</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>The jAI World Ecosystem Blueprint</h2>
+                <p>An omnipresent operations framework engineered to optimize business complexity, manage database payloads, and eliminate resource bottlenecks.</p>
+            </div>
+            <div class="grid-3">
+                <div class="glass-card" onclick="switchView('ai-employees-view')" style="cursor:pointer;">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-user-gear"></i></div>
+                    <h3>AI Virtual Staff</h3>
+                    <p style="color:var(--text-muted); margin-top: 0.5rem;">Deploy domain-specific autonomous instances equipped to navigate troubleshooting matrix frameworks instantly.</p>
+                </div>
+                <div class="glass-card" onclick="switchView('services-view')" style="cursor:pointer;">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3>Modernization Pillars</h3>
+                    <p style="color:var(--text-muted); margin-top: 0.5rem;">From legacy transactional mainframe infrastructures to resilient cloud-native container systems.</p>
+                </div>
+                <div class="glass-card" onclick="switchView('store-view')" style="cursor:pointer;">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-cubes"></i></div>
+                    <h3>Accelerators & Assets</h3>
+                    <p style="color:var(--text-muted); margin-top: 0.5rem;">Equip internal development teams with certified blueprint assets, architectural structures, and execution templates.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="about-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>About jAI World</h2>
+                <p>Forging high-performance structural symmetry between deep technical legacy systems and the frontiers of artificial intelligence.</p>
+            </div>
+            <div class="grid-2 about-split">
+                <div>
+                    <h3 style="font-size:1.75rem; margin-bottom:1rem; font-family:'Orbitron';">The Modern Architecture Imperative</h3>
+                    <p style="color: var(--text-muted); margin-bottom:1.25rem;">jAI World emerged as a premium solutions firm engineered to bridge operational chasms within modern businesses. We combine rigorous automated data compliance practices with advanced artificial intelligence configurations to eliminate friction points across standard operational models.</p>
+                    <p style="color: var(--text-muted);">By configuring unified process metrics, our environments empower businesses to systematically orchestrate unstructured workloads, deploy production code pipelines safely, and optimize cloud infrastructure costs.</p>
+                </div>
+                <div class="glass-card profile-card">
+                    <h3 style="font-family:'Orbitron'; font-size:1.5rem; margin-bottom:0.5rem;">Jerome Govender</h3>
+                    <p style="color: var(--accent-cyan); font-weight:600; font-size:0.95rem; margin-bottom:1.25rem; text-transform:uppercase; letter-spacing:1px;">Founder & Principal Architect</p>
+                    <p style="color: var(--text-muted); font-size:0.95rem;">A senior infrastructure architect with over 20 years of proven expertise managing and optimizing complex systems within demanding banking configurations and critical enterprise IT sectors.</p>
+                    <div class="tag-cloud">
+                        <span class="tag">Mainframe DB2 & IMS</span>
+                        <span class="tag">Database Administration (DBA)</span>
+                        <span class="tag">RPA (Blue Prism / UiPath)</span>
+                        <span class="tag">DevOps & OpenShift</span>
+                        <span class="tag">Linux System Internals</span>
+                        <span class="tag">AWS Cloud Solutions Architecting</span>
+                        <span class="tag">AI Systems Integration</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="ai-employees-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>Meet Our AI Employees</h2>
+                <p>Autonomous virtual personnel meticulously optimized for distinct professional tracks, operational oversight, and enterprise automation workloads.</p>
+            </div>
+            <div class="grid-4">
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-brain"></i></div>
+                    <h3 style="font-size:1.15rem;">Ask jAI</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">General Intelligence Specialist optimized for cross-domain deep research, planning execution, and advanced strategy mapping.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Initiate Query Link</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-terminal"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Tech</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Infrastructure diagnostics, cloud configurations, Linux system management, OpenShift clustering, and cross-platform database debugging.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Initiate Technical Audit</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-gears"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Automate</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">RPA orchestrations expert specializing in UiPath structures, Blue Prism pathways, and enterprise-wide process flows.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Deploy Automation Bot</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-graduation-cap"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Learn</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Generates individualized technical curriculum tracks, career milestones mapping, and targeted infrastructure tutorials.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Access Mentorship Matrix</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-comments"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Community</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Monitors collective knowledge sharing pipelines, forums engagement strategy, and open collaboration channels.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Connect To Forum Hub</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Store Agent</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Matches precise asset requirements with relevant engineering toolsets, digital kits, and software templates.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('store-view')">Query Asset Database</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Business Advisor</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Evaluates business metrics, optimizes pricing, generates structured project proposals, and blueprints scale-up tracks.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Request Strategic Model</button>
+                </div>
+                <div class="glass-card">
+                    <div class="ai-icon-wrapper"><i class="fa-solid fa-headset"></i></div>
+                    <h3 style="font-size:1.15rem;">jAI Support Desk</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin:0.75rem 0 1.25rem;">Handles incident ingestion fields, tracks service level metrics, and resolves critical operational inquiries.</p>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.75rem; padding:0.5rem;" onclick="switchView('contact-view')">Open Ingestion Ticket</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="services-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>Our Professional Services</h2>
+                <p>Enterprise engineering capacities optimized to scale infrastructure, implement process modernizations, and secure underlying data layers.</p>
+            </div>
+            <div class="grid-3">
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Consulting</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Integration strategies for deploying high-efficiency AI ecosystems and tailored automation models directly into your business structure.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-laptop-code"></i> IT Support Matrix</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Rapid systemic troubleshooting, environmental tracking, hardware deployment mapping, and enterprise system configurations maintenance.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-database"></i> Database Services</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Comprehensive DB2 & IMS management. Tuning processing parameters, index maintenance, structure transformations, and storage optimization updates.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-code"></i> Website Development</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Building secure, responsive, modern digital platforms leveraging glassmorphism principles and structured layouts optimized for user retention.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-robot"></i> Automation & RPA</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Designing robust end-to-end robotic automation maps utilizing functional platforms like Blue Prism, UiPath, and custom execution engines.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-cloud"></i> Cloud & Infrastructure</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Systematic modernization migrations targeting AWS cloud structures. Optimizing asset buckets, permissions architecture, and network tunnels.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-cubes"></i> DevOps & Linux Support</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Configuring CI/CD code deployments, orchestration clusters via OpenShift, and secure low-level Linux configuration management environments.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-chart-pie"></i> Process Improvement</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Analyzing workflows to identify structural inefficiencies and reorganize process paths, significantly minimizing manual operational cycles.</p>
+                </div>
+                <div class="glass-card">
+                    <h3 style="color:var(--accent-cyan); margin-bottom:1rem;"><i class="fa-solid fa-id-card"></i> Digital Branding</h3>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Developing high-end digital identity architectures, typography rule sheets, structured content plans, and premium interface designs.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="pricing-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>Strategic Pricing Tiers</h2>
+                <p>Transparent, scalable tier configurations optimized for various business sizes. All valuations denominated in South African Rand (ZAR).</p>
+            </div>
+            <div class="grid-3" style="align-items: start;">
+                <div class="glass-card">
+                    <h3 style="font-family:'Orbitron';">Starter Package</h3>
+                    <div style="font-size:2rem; font-weight:700; color:var(--accent-cyan); margin:1rem 0;">From R499</div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Ideal for basic updates, structural code maintenance, short tech consultations, single-landing page setups, or targeted environment guidance.</p>
+                    <button class="btn btn-secondary" style="width:100%;" onclick="switchView('contact-view')">Select Starter Integration</button>
+                </div>
+                <div class="glass-card" style="border-color: var(--accent-purple);">
+                    <h3 style="font-family:'Orbitron';">Business Support</h3>
+                    <div style="font-size:2rem; font-weight:700; color:var(--accent-purple); margin:1rem 0;">From R1,499</div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Optimized for expanding small businesses. Includes core domain setup support, standard platform optimization, basic script automations, and architectural consultation updates.</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="switchView('contact-view')">Select Business Tier</button>
+                </div>
+                <div class="glass-card">
+                    <h3 style="font-family:'Orbitron';">Professional</h3>
+                    <div style="font-size:2rem; font-weight:700; color:var(--accent-cyan); margin:1rem 0;">From R3,499</div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Comprehensive system modernization. Full multi-page application restructures, customized branding guidelines, core SEO integration steps, and dynamic logic implementations.</p>
+                    <button class="btn btn-secondary" style="width:100%;" onclick="switchView('contact-view')">Select Professional Path</button>
+                </div>
+                <div class="glass-card">
+                    <h3 style="font-family:'Orbitron';">Automation Tier</h3>
+                    <div style="font-size:2rem; font-weight:700; color:var(--accent-cyan); margin:1rem 0;">From R5,000</div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Dedicated operational automation paths. Process sequence mapping, core platform RPA implementations, internal API scripting links, and AI workflow automation layers.</p>
+                    <button class="btn btn-secondary" style="width:100%;" onclick="switchView('contact-view')">Deploy Automation Track</button>
+                </div>
+                <div class="glass-card" style="grid-column: span 1; border-color: var(--accent-cyan);">
+                    <h3 style="font-family:'Orbitron';">Enterprise / Custom</h3>
+                    <div style="font-size:2rem; font-weight:700; color:var(--accent-cyan); margin:1rem 0;">Quote Based</div>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">High-availability enterprise configurations. Complete mainframe optimization (DB2/IMS), deep cloud deployments, OpenShift cluster setups, DevOps automation, and specialized system integrations.</p>
+                    <button class="btn btn-primary" style="width:100%;" onclick="switchView('contact-view')">Request Enterprise Audit</button>
+                </div>
+            </div>
+            <p style="text-align:center; color:var(--text-muted); margin-top:3rem; font-style:italic; font-size:0.95rem;"><blockquote>"Final pricing depends on scope, complexity, timelines, and support requirements."</blockquote></p>
+        </section>
+    </main>
+
+    <main id="blog-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>jAI Knowledge Hub</h2>
+                <p>Technical deep dives, strategy playbooks, and structural updates straight from our core engineering desks.</p>
+            </div>
+
+            <div class="category-container">
+                <span class="filter-chip active">All Updates</span>
+                <span class="filter-chip">AI Tips</span>
+                <span class="filter-chip">Website Guides</span>
+                <span class="filter-chip">Business Ideas</span>
+                <span class="filter-chip">Automation</span>
+                <span class="filter-chip">Database Support</span>
+                <span class="filter-chip">Tech Tutorials</span>
+                <span class="filter-chip">Career Growth</span>
+            </div>
+
+            <div class="grid-3">
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">AI Tips</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">How AI Can Help Small Businesses Save Time</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">Learn how implementing conversational agents and structured prompt engineering frameworks can automate repetitive customer support queues and free up useful resource blocks.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">Website Guides</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">Why Every Business Needs a Simple Website</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">A focused digital platform cuts through market noise. Discover how lightweight, clean code foundations improve conversion performance and user credibility indexes.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">Automation</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">Beginner Guide to Automation</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">Demystifying automated paths. Learn to recognize repeatable manual steps and structural business routines ripe for robotic processing rules.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">AI Tips</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">How to Use AI Employees in Your Business</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">Operational guide on delegating functional tasks like general text curation, structural logging, and technical triage scripts to dedicated virtual workers.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">Database Support</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">Database Support Explained in Simple Terms</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">Understanding relational storage arrays without complex jargon. Learn why regular indexing optimizations and schema care prevent severe application lags.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+                <article class="glass-card">
+                    <span style="color:var(--accent-cyan); font-size:0.8rem; font-weight:700; text-transform:uppercase;">Business Ideas</span>
+                    <h3 style="margin:0.5rem 0 1rem; font-size:1.25rem;">How to Start an Online Business in South Africa</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.25rem;">A step-by-step blueprint covering payment gateway choices, legal local frameworks, hosting selections, and scalable infrastructure plans for South African tech founders.</p>
+                    <a href="#" style="color:var(--accent-blue); text-decoration:none; font-weight:600; font-size:0.9rem;">Read Protocol &rarr;</a>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <main id="store-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>Digital Asset Store</h2>
+                <p>Equip your engineering layers and management operations with field-verified project kits, operational blueprints, and digital templates.</p>
+            </div>
+
+            <div class="category-container">
+                <span class="filter-chip active">All Assets</span>
+                <span class="filter-chip">Business Templates</span>
+                <span class="filter-chip">Website Templates</span>
+                <span class="filter-chip">AI Prompts</span>
+                <span class="filter-chip">Automation Templates</span>
+                <span class="filter-chip">Branding Kits</span>
+                <span class="filter-chip">Learning Guides</span>
+            </div>
+
+            <div class="grid-4">
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-regular fa-file-lines"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Business Plan Template</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Fully structured financial models and growth roadmaps formatted for target investment proposals.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 250.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-list-check"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Website Launch Checklist</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Comprehensive SEO sanity audits, caching settings checks, and security rule matrices required before system activation.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 120.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-terminal"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">AI Prompt Pack</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Advanced contextual system rules engineered for precise code generation and multi-track technical research fields.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 180.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Invoice Template</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Sleek, automated billing sheet layout structured for clean project accounting tracking records.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 90.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-hashtag"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Social Content Pack</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Pre-formatted structural assets and copy guides designed to build authority profiles in modern technology sectors.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 299.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-diagram-project"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Automation Planner</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">Visual logic blueprints and state tracking charts for outlining enterprise RPA development phases.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 350.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+                <div class="glass-card">
+                    <div style="font-size:2.5rem; color:var(--accent-purple); margin-bottom:1rem;"><i class="fa-solid fa-box-open"></i></div>
+                    <h4 style="font-size:1.1rem; margin-bottom:0.5rem;">Small Biz Starter Kit</h4>
+                    <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1rem;">An all-in-one resource pack combining basic business documentation models, data tracking guides, and launch steps.</p>
+                    <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:1rem;">R 599.00</div>
+                    <button class="btn btn-secondary" style="width:100%; font-size:0.8rem; padding:0.5rem;">Coming Soon</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <main id="contact-view" class="page-view">
+        <section class="section-padding">
+            <div class="section-header">
+                <h2>Initiate Connection Link</h2>
+                <p>Submit your parameters below. Our processing systems and management desks will respond promptly within active operational windows.</p>
+            </div>
+            <div class="grid-2">
+                <div class="glass-card">
+                    <form onsubmit="event.preventDefault(); alert('Transmission Successful. Processing parameters...');">
+                        <div class="form-group">
+                            <label for="contact-name">Identity / Organization Name</label>
+                            <input type="text" id="contact-name" class="form-control" required placeholder="Enter name or entity">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Secure Communication Ingestion Node (Email)</label>
+                            <input type="email" id="contact-email" class="form-control" required placeholder="name@domain.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-type">Engagement Profile Track</label>
+                            <select id="contact-type" class="form-control" style="background:#0f172a;">
+                                <option>General Information Query</option>
+                                <option>Professional Service Request</option>
+                                <option>AI Employee Integration Track</option>
+                                <option>Database Optimization Service</option>
+                                <option>Infrastructure Tech Support Incident</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-msg">Project Specifics / Request Context</label>
+                            <textarea id="contact-msg" class="form-control" rows="5" required placeholder="Provide clear contextual scope details..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Transmit Packet <i class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:2rem;">
+                    <div class="glass-card">
+                        <h3 style="font-family:'Orbitron'; margin-bottom:1rem; font-size:1.25rem;">Direct Core Ingestion Node</h3>
+                        <p style="color:var(--text-muted); display:flex; align-items:center; gap:0.75rem;">
+                            <i class="fa-solid fa-envelope" style="color:var(--accent-cyan);"></i> ask@jaiworld.co.za
+                        </p>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-family:'Orbitron'; margin-bottom:1rem; font-size:1.25rem;">Instant Messaging Matrix</h3>
+                        <p style="color:var(--text-muted); margin-bottom:1.25rem;">Need to bridge into direct communication loops immediately? Connect via our primary chat channel.</p>
+                        <a href="https://wa.me/#" target="_blank" class="btn btn-secondary" style="border-color:#25d366; color:#25d366;"><i class="fa-brands fa-whatsapp"></i> Launch WhatsApp Secure Link</a>
+                    </div>
+                    <div class="glass-card">
+                        <h3 style="font-family:'Orbitron'; margin-bottom:1rem; font-size:1.25rem;">Active Processing Windows</h3>
+                        <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:0.5rem;">Monday – Friday: 08:00 – 17:00 (SAST)</p>
+                        <p style="color:var(--text-muted); font-size:0.95rem;">Saturday: 09:00 – 13:00 (SAST) | Sunday: Standby Mode</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <a href="#" class="brand-logo" onclick="switchView('home-view')">
+                    <span class="brand-j">j</span><span class="brand-ai">AI</span> World
+                </a>
+                <p>A premium enterprise solutions platform driving automated scalability, IT modernizations, and custom intelligence deployments.</p>
+                <div style="display:flex; gap:1rem; margin-top:1.5rem; font-size:1.25rem;">
+                    <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-github"></i></a>
+                    <a href="#" style="color:var(--text-muted);"><i class="fa-brands fa-x-twitter"></i></a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4>System Maps</h4>
+                <ul>
+                    <li><a onclick="switchView('home-view')">Home Hub</a></li>
+                    <li><a onclick="switchView('about-view')">About Core</a></li>
+                    <li><a onclick="switchView('pricing-view')">Pricing Matrix</a></li>
+                    <li><a onclick="switchView('contact-view')">Contact Node</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-col">
+                <h4>Capabilities</h4>
+                <ul>
+                    <li><a onclick="switchView('services-view')">Professional Services</a></li>
+                    <li><a onclick="switchView('ai-employees-view')">Meet AI Employees</a></li>
+                    <li><a onclick="switchView('blog-view')">Knowledge Hub Updates</a></li>
+                    <li><a onclick="switchView('store-view')">Digital Asset Store</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-col">
+                <h4>Ecosystem Assets</h4>
+                <ul>
+                    <li><a onclick="switchView('store-view')">Business Plan Assets</a></li>
+                    <li><a onclick="switchView('store-view')">AI Prompt Packs</a></li>
+                    <li><a onclick="switchView('store-view')">Automation Planners</a></li>
+                    <li><a onclick="switchView('store-view')">Small Biz Kits</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div>&copy; 2026 jAI World. All rights reserved. Engineered in South Africa.</div>
+            <div class="footer-legal-links">
+                <a href="#" onclick="alert('Displaying standard non-disclosure data parameters...');" style="color:var(--text-muted); text-decoration:none;">Privacy Policy</a>
+                <a href="#" onclick="alert('Displaying standard terms of service operations metrics...');" style="color:var(--text-muted); text-decoration:none;">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Core Single-Page Routing View Logic
+        function switchView(viewId) {
+            // Deactivate all running main containers
+            const views = document.querySelectorAll('.page-view');
+            views.forEach(view => {
+                view.classList.remove('active-view');
+            });
+
+            // Activate chosen frame
+            const targetView = document.getElementById(viewId);
+            if (targetView) {
+                targetView.classList.add('active-view');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Sync Nav Element Highlighter States
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => {
+                link.classList.remove('active');
+                // Cross-reference click handlers to maintain active highlight state
+                if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(viewId)) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Close mobile tray automatically if active
+            const navLinksMenu = document.getElementById('nav-links');
+            if(navLinksMenu.classList.contains('mobile-open')) {
+                navLinksMenu.classList.remove('mobile-open');
+            }
+        }
+
+        // Mobile Burger Menu Interface Controls
+        document.getElementById('nav-burger').addEventListener('click', () => {
+            const menu = document.getElementById('nav-links');
+            menu.classList.toggle('mobile-open');
+        });
+    </script>
+</body>
+</html>
